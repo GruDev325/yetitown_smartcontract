@@ -1219,17 +1219,28 @@ abstract contract Ownable is Context {
 
 pragma solidity >=0.7.0 <0.9.0;
 
-contract YetiTest3 is ERC721Enumerable, Ownable {
+contract YetiTest9 is ERC721Enumerable, Ownable {
   using Strings for uint256;
 
+  uint private deployDate;
   string baseURI;
   string public baseExtension = ".json";
-  uint256 public cost = 0.02 ether;
-  uint256 public maxSupply = 100;
-  uint256 public maxMintAmount = 2;
+  uint256 public preSaleCost = 0.077 ether;
+  uint256 public publicSaleCost = 0.088 ether;
+  uint256 public maxSupply = 5555;
+  uint256 public maxMintAmount = 3;
   bool public paused = true;
-  bool public revealed = false;
   string public notRevealedUri;
+  bool public presaleIsActive = false;
+  bool public communitySaleIsActive = false;
+  mapping(uint256 => uint) revealTime;
+
+    struct WhitelistEntry {
+        bool isApproved;
+        uint reservedQuantity;
+    }
+
+    mapping(address => WhitelistEntry) public whitelist;
 
   constructor(
     string memory _name,
@@ -1237,6 +1248,7 @@ contract YetiTest3 is ERC721Enumerable, Ownable {
     string memory _initBaseURI,
     string memory _initNotRevealedUri
   ) ERC721(_name, _symbol) {
+    deployDate = block.timestamp;
     setBaseURI(_initBaseURI);
     setNotRevealedURI(_initNotRevealedUri);
   }
@@ -1247,19 +1259,40 @@ contract YetiTest3 is ERC721Enumerable, Ownable {
   }
 
   // public
+  function flipPresaleState() public onlyOwner {
+        presaleIsActive = !presaleIsActive;
+  }
+
+  // public
   function mint(uint256 _mintAmount) public payable {
     uint256 supply = totalSupply();
+
     require(!paused);
-    require(_mintAmount > 0);
-    require(_mintAmount <= maxMintAmount);
+    require(_mintAmount > 0, "Must at least mint 1 yeti");
+    require(_mintAmount <= maxMintAmount, "Can not mint exceed 3 yetis");
     require(supply + _mintAmount <= maxSupply);
 
-    if (msg.sender != owner()) {
-      require(msg.value >= cost * _mintAmount);
-    }
-
-    for (uint256 i = 1; i <= _mintAmount; i++) {
-      _safeMint(msg.sender, supply + i);
+    if(communitySaleIsActive) {
+        for(uint i = 0; supply + i < 4047; i ++){
+            _safeMint(msg.sender, supply + i);
+        }
+        communitySaleIsActive = false;
+    } else if((supply + _mintAmount >= 4021)) {
+        communitySaleIsActive = true;   
+    } else {
+        uint256 _currentCost = 100 ether;
+        if (msg.sender != owner()) {
+            require(msg.value >= _currentCost * _mintAmount);
+        }
+        uint _expiredTime = (block.timestamp - deployDate) / 3600;
+        if(_expiredTime >= 24) {
+            _currentCost = publicSaleCost;
+        } else {
+            _currentCost = preSaleCost;
+        }
+        for (uint256 i = 1; i <= _mintAmount; i++) {
+            _safeMint(msg.sender, supply + i);
+        }            
     }
   }
 
@@ -1287,8 +1320,10 @@ contract YetiTest3 is ERC721Enumerable, Ownable {
       _exists(tokenId),
       "ERC721Metadata: URI query for nonexistent token"
     );
-    
-    if(revealed == false) {
+
+    uint _timeSpent = estimateRevealedTime(tokenId);
+
+    if (_timeSpent < 5){
         return notRevealedUri;
     }
 
@@ -1298,13 +1333,18 @@ contract YetiTest3 is ERC721Enumerable, Ownable {
         : "";
   }
 
-  //only owner
-  function reveal() public onlyOwner {
-      revealed = true;
+  //public
+  function estimateRevealedTime(uint256 tokenId) public view returns (uint){
+    uint current = block.timestamp;
+    return (current - revealTime[tokenId]) / 60;
   }
   
-  function setCost(uint256 _newCost) public onlyOwner {
-    cost = _newCost;
+  function setPreSaleCost(uint256 _newCost) public onlyOwner {
+    preSaleCost = _newCost;
+  }
+
+  function setPublicSaleCost(uint256 _newCost) public onlyOwner {
+    publicSaleCost = _newCost;
   }
 
   function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner {
@@ -1327,13 +1367,9 @@ contract YetiTest3 is ERC721Enumerable, Ownable {
     paused = _state;
   }
  
-  function withdraw() public payable onlyOwner {
-    
-    // This will payout the owner 95% of the contract balance.
-    // Do not remove this otherwise you will not be able to withdraw the funds.
-    // =============================================================================
+  function withdraw() public payable onlyOwner {    
     (bool os, ) = payable(owner()).call{value: address(this).balance}("");
-    require(os);
-    // =============================================================================
-  }
+    require(os);    
+  } 
+  
 }

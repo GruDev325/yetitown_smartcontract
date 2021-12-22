@@ -1,0 +1,46 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"details": "Collection of functions related to the address type",
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Documents/Application/Coding_work/NFT/OnGoing/yetitown/Projects/yetitown_smartcontract/info/YetiTest3.sol": "Address"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Documents/Application/Coding_work/NFT/OnGoing/yetitown/Projects/yetitown_smartcontract/info/YetiTest3.sol": {
+			"keccak256": "0x5f0a7ca98d8154684d66fdc22dc751cdb8bdcd9b8a72b9eaa493baecb8b75ad6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6ca8c5cc6f70a1cf725184ba78a5985bdb97b1426ad86679575c8cbb1582bb7c",
+				"dweb:/ipfs/Qmf3tPFtjGvr1LAEcmqSEsigmqodmDTaz42fCrEEVSRT2c"
+			]
+		}
+	},
+	"version": 1
+}

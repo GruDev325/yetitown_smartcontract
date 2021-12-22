@@ -1,0 +1,70 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"details": "Implementation of the {IERC165} interface. Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check for the additional interface id that will be supported. For example: ```solidity function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId); } ``` Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.",
+			"kind": "dev",
+			"methods": {
+				"supportsInterface(bytes4)": {
+					"details": "See {IERC165-supportsInterface}."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Documents/Application/Coding_work/NFT/OnGoing/yetitown/Projects/yetitown_smartcontract/info/YetiTest3.sol": "ERC165"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Documents/Application/Coding_work/NFT/OnGoing/yetitown/Projects/yetitown_smartcontract/info/YetiTest3.sol": {
+			"keccak256": "0x5f0a7ca98d8154684d66fdc22dc751cdb8bdcd9b8a72b9eaa493baecb8b75ad6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6ca8c5cc6f70a1cf725184ba78a5985bdb97b1426ad86679575c8cbb1582bb7c",
+				"dweb:/ipfs/Qmf3tPFtjGvr1LAEcmqSEsigmqodmDTaz42fCrEEVSRT2c"
+			]
+		}
+	},
+	"version": 1
+}

@@ -1660,9 +1660,10 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
 
     function pause(bool _state) public onlyOwner {
         paused = _state;
-        if (!_state) {
-            whitelistSaleStartDate = block.timestamp;
-        }
+    }
+
+    function setWhitelistSaleStartDate() public onlyOwner {        
+        whitelistSaleStartDate = block.timestamp;
     }
 
     function withdraw() public payable onlyOwner {

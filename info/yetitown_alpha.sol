@@ -1582,6 +1582,41 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
         }
     }
 
+    /**
+     * @dev See {IERC721-safeTransferFrom}.
+     */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public virtual override {
+        uint256 _timeSpent = (block.timestamp - whitelistSaleStartDate) / 3600;
+
+        if (_timeSpent > 24) {
+            safeTransferFrom(from, to, tokenId, "");
+        }
+    }
+
+    /**
+     * @dev See {IERC721-safeTransferFrom}.
+     */
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        bytes memory _data
+    ) public virtual override {
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "ERC721: transfer caller is not owner nor approved"
+        );
+        uint256 _timeSpent = (block.timestamp - whitelistSaleStartDate) / 3600;
+
+        if (_timeSpent > 24) {
+            _safeTransfer(from, to, tokenId, _data);
+        }
+    }
+
     function addToWhitelist(address _address) public onlyOwner {
         if (!whitelist[_address]) {
             whitelist[_address] = true;

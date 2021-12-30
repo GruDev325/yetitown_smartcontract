@@ -1421,6 +1421,9 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
 
     mapping(address => bool) public whitelist;
 
+    event YetiMinted(uint256 indexed tokenId);
+    event YetiBurned(uint256 indexed tokenId);
+
     constructor(
         string memory _name,
         string memory _symbol,
@@ -1470,6 +1473,7 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
 
         for (uint256 i = 0; i < _mintAmount; i++) {
             if (!_exists(nextTokenId)) {
+                emit YetiMinted(nextTokenId);
                 _safeMint(msg.sender, nextTokenId);
                 nextTokenId++;
             }
@@ -1480,7 +1484,7 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
     // Mint for tresury
     function tresuryPresaleMint(address _to, uint256 _amount) public onlyOwner {
         require(!paused);
-        require(_amount > 0, "Invalid amount");        
+        require(_amount > 0, "Invalid amount");
         require(
             lastMagicTokenID + _amount <= maxSupply,
             "Cannot exceed maximum number of supply."
@@ -1492,6 +1496,7 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
 
         for (uint256 j = 1; j <= _amount; j++) {
             if (!_exists(lastMagicTokenID + j)) {
+                emit YetiMinted(nextTokenId);
                 _safeMint(_to, (lastMagicTokenID + j));
             }
         }
@@ -1502,7 +1507,7 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
     // public
     // Mint for tresury
     function tresuryMint(address _to, uint256 _amount) public onlyOwner {
-        require(_amount > 0, "Invalid amount");        
+        require(_amount > 0, "Invalid amount");
         require(
             nextTokenId + _amount <= maxSupply,
             "Cannot exceed maximum number of supply."
@@ -1510,19 +1515,20 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
 
         for (uint256 j = 1; j <= _amount; j++) {
             if (!_exists(nextTokenId)) {
+                emit YetiMinted(nextTokenId);
                 _safeMint(_to, lastMagicTokenID);
                 nextTokenId += 1;
             }
-        }                
+        }
     }
 
-
-    // public
-    // Mint for tresury
-    function burn(uint256[] memory tokenIds) external onlyOwner{
-        for(uint256 i = 0; i < tokenIds.length; i++){
-        _burn(tokenIds[0]);                  
-        }        
+    /**
+     * Burn a token - any game logic should be handled before this function.
+     */
+    function burn(uint256 tokenId) external {
+        require(ownerOf(tokenId) == tx.origin, "Oops you don't own that");
+        emit YetiBurned(tokenId);
+        _burn(tokenId);
     }
 
     function tokenURI(uint256 tokenId)

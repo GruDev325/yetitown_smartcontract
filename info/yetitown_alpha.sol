@@ -1435,6 +1435,13 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
         setNotRevealedURI(_initNotRevealedUri);
     }
 
+    modifier blockTradeIfNot24hrPassed() {
+        // frens can always call whenever they want :)
+        uint256 _timeSpent = (block.timestamp - whitelistSaleStartDate) / 3600;
+        require(_timeSpent > 24);        
+        _;
+    }
+
     // internal
     function _baseURI() internal view virtual override returns (string memory) {
         return baseURI;
@@ -1569,17 +1576,14 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
         address from,
         address to,
         uint256 tokenId
-    ) public virtual override {
+    ) public virtual override blockTradeIfNot24hrPassed{
         //solhint-disable-next-line max-line-length
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "ERC721: transfer caller is not owner nor approved"
         );
-        uint256 _timeSpent = (block.timestamp - whitelistSaleStartDate) / 3600;
-
-        if (_timeSpent > 24) {
-            _transfer(from, to, tokenId);
-        }
+        
+        _transfer(from, to, tokenId);
     }
 
     /**
@@ -1589,12 +1593,9 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
         address from,
         address to,
         uint256 tokenId
-    ) public virtual override {
-        uint256 _timeSpent = (block.timestamp - whitelistSaleStartDate) / 3600;
-
-        if (_timeSpent > 24) {
-            safeTransferFrom(from, to, tokenId, "");
-        }
+    ) public virtual override blockTradeIfNot24hrPassed{
+        
+        safeTransferFrom(from, to, tokenId, "");
     }
 
     /**
@@ -1605,16 +1606,13 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
         address to,
         uint256 tokenId,
         bytes memory _data
-    ) public virtual override {
+    ) public virtual override blockTradeIfNot24hrPassed{
         require(
             _isApprovedOrOwner(_msgSender(), tokenId),
             "ERC721: transfer caller is not owner nor approved"
         );
-        uint256 _timeSpent = (block.timestamp - whitelistSaleStartDate) / 3600;
-
-        if (_timeSpent > 24) {
-            _safeTransfer(from, to, tokenId, _data);
-        }
+        
+        _safeTransfer(from, to, tokenId, _data);
     }
 
     function addToWhitelist(address _address) public onlyOwner {

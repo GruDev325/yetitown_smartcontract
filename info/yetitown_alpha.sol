@@ -1519,9 +1519,10 @@ contract YetiTown_Alpha is ERC721Enumerable, Ownable {
 
     // public
     // Mint for tresury
-    function burn() external onlyOwner{
-        uint256 restAmount = 5555 - nextTokenId + 1;
-        _burn(restAmount);                  
+    function burn(uint256[] memory tokenIds) external onlyOwner{
+        for(uint256 i = 0; i < tokenIds.length; i++){
+        _burn(tokenIds[0]);                  
+        }        
     }
 
     function tokenURI(uint256 tokenId)
